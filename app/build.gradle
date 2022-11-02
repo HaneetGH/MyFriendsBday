@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'kotlin-android'
     id 'com.google.dagger.hilt.android'
 }
 android {
@@ -21,6 +22,10 @@ android {
         }
     }
 
+    // Allow references to generated code
+    kapt {
+        correctErrorTypes true
+    }
     buildTypes {
         release {
             minifyEnabled false

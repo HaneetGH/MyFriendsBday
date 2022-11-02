@@ -11,4 +11,8 @@ data class UserInfoModel(
     @ColumnInfo(name = "name") var name: String,
 
     @ColumnInfo(name = "dob") var dob: String,
-)
+) {
+    constructor() : this(
+        0, "", ""
+    )
+}

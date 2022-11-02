@@ -8,7 +8,7 @@ interface UserInfoDao {
 
     //Adds a contact to the database
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(LocationTable: UserInfoModel?): Long
+    fun insert(userinfoModel: UserInfoModel?): Long
 
     // Removes a contact from the database
     @Delete
@@ -20,10 +20,10 @@ interface UserInfoDao {
 
 
     @Update
-    fun updateUser(LocationTable: UserInfoModel?)
+    fun updateUser(userinfoModel: UserInfoModel?)
 
     @Update
-    fun updateUser(vararg LocationTable: UserInfoModel?)
+    fun updateUser(vararg userinfoModel: UserInfoModel?)
 
 
     @Query("delete from userDetailsMaster")
