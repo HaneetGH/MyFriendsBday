@@ -20,7 +20,10 @@ import com.technorapper.myfriendsbday.ui.component.DatePickerCompose
 import com.technorapper.myfriendsbday.ui.component.EditTextState
 import com.technorapper.myfriendsbday.ui.component.PTEditText
 import com.technorapper.myfriendsbday.ui.theme.MyFriendsBdayTheme
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.HiltAndroidApp
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     lateinit var editTextState: EdittextStateCl
     lateinit var dateState: DateState
