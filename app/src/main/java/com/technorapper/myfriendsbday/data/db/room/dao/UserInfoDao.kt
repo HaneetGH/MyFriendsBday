@@ -2,6 +2,7 @@ package com.technorapper.myfriendsbday.data.db.room.dao
 
 import androidx.room.*
 import com.technorapper.myfriendsbday.data.db.model.UserInfoModel
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserInfoDao {
@@ -16,7 +17,7 @@ interface UserInfoDao {
 
     // Gets all contact in the database
     @Query("select * from userDetailsMaster Order by id DESC")
-    fun getAllUsers(): List<UserInfoModel>
+    suspend fun getAllUsers(): List<UserInfoModel>
 
 
     @Update
