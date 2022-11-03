@@ -22,6 +22,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Observer
+import com.technorapper.myfriendsbday.domain.DataState
 import com.technorapper.myfriendsbday.ui.component.DatePickerCompose
 import com.technorapper.myfriendsbday.ui.component.EditTextState
 import com.technorapper.myfriendsbday.ui.component.PTEditText
@@ -74,6 +76,9 @@ class MainActivity : ComponentActivity() {
                                                 dateState.dateStateChange
                                             )
                                         )
+                                        viewModel.setStateEvent(
+                                            MainStateEvent.getAllData
+                                        )
                                     }
                                 }
                             }
@@ -84,6 +89,15 @@ class MainActivity : ComponentActivity() {
                 Log.d("Data", textChangeState.textChange + "--" + dateState.dateStateChange)
             }
         }
+        viewModel.getUiState().observe(this, Observer {
+            var res = it as DataState
+            when(res)
+            {
+                is DataState.Success<*> ->{
+                    Log.d("DataState",it.toString())
+                }
+            }
+        })
     }
 }
 

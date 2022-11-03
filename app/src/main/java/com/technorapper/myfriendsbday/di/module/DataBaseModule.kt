@@ -3,6 +3,7 @@ package com.technorapper.myfriendsbday.di.module
 import android.content.Context
 import androidx.room.Room
 import com.technorapper.myfriendsbday.data.db.room.Database
+import com.technorapper.myfriendsbday.data.usecase.UserDetailsUseCase
 
 import dagger.Module
 import dagger.Provides
@@ -21,12 +22,13 @@ object DataBaseModule {
     fun provideYourDatabase(
         @ApplicationContext app: Context
     ) = Room.databaseBuilder(
-        app, Database::class.java, "your_db_name"
+        app, Database::class.java, "test_db"
     ).build() // The reason we can construct a database for the repo
 
     @Singleton
     @Provides
     fun provideYourDao(db: Database) =
-        db.getLocationMaster() // The reason we can implement a Dao for the database
+        db.getUserInfoDaoMaster() // The reason we can implement a Dao for the database
+
 
 }

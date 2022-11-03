@@ -1,13 +1,12 @@
 package com.technorapper.myfriendsbday
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.technorapper.myfriendsbday.data.repository.MainActivityRepository
 import com.technorapper.myfriendsbday.data.usecase.UserDetailsUseCase
 import com.technorapper.myfriendsbday.domain.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,6 +16,13 @@ class MainActivityViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState: MutableLiveData<DataState> = MutableLiveData()
     val uiState: MutableLiveData<DataState> get() = _uiState
+
+
+    @JvmName("getUiState1")
+    fun getUiState(): MutableLiveData<DataState> {
+        return uiState
+    }
+
     fun setStateEvent(mainStateEvent: MainStateEvent) {
         viewModelScope.launch {
             when (mainStateEvent) {
@@ -24,6 +30,11 @@ class MainActivityViewModel @Inject constructor(
                     usecase.saveData(
                         mainStateEvent.name, mainStateEvent.dob
                     ).collect { uiState.value = it }
+                }
+                is MainStateEvent.getAllData -> {
+                    usecase.getAllData().collect {
+                        uiState.value = it
+                    }
                 }
 
             }
@@ -35,5 +46,6 @@ class MainActivityViewModel @Inject constructor(
 sealed class MainStateEvent {
 
     data class SaveData(var name: String, var dob: String) : MainStateEvent()
+    object getAllData : MainStateEvent()
     object None : MainStateEvent()
 }

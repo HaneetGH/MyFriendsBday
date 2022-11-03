@@ -12,7 +12,7 @@ import com.technorapper.myfriendsbday.data.db.room.dao.UserInfoDao
 
 abstract class Database : RoomDatabase() {
 
-    abstract fun getLocationMaster(): UserInfoDao
+    abstract fun getUserInfoDaoMaster(): UserInfoDao
 }
 
 
