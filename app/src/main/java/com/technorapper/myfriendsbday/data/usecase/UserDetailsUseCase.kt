@@ -18,8 +18,8 @@ class UserDetailsUseCase @Inject constructor(
             emit(DataState.Loading(Task.SAVE))
             // var response: VehicleCategoriesList = null
             try {
-                var response = mainActivityRepository.saveDataInDB(name, dob)
-                emit(DataState.Success(response, Task.SAVE))
+                mainActivityRepository.saveDataInDB(name, dob)
+                    .collect { emit(DataState.Success(it, Task.SAVE)) }
             } catch (e: Exception) {
                 Log.e("fetch erroe", e.message.toString());
             }

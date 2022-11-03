@@ -28,7 +28,7 @@ import com.technorapper.myfriendsbday.ui.component.PTEditText
 import com.technorapper.myfriendsbday.ui.theme.MyFriendsBdayTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     lateinit var editTextState: EdittextStateCl
     lateinit var dateState: DateState
@@ -63,7 +63,6 @@ class MainActivity : ComponentActivity() {
 
 
                         val interactionSource = remember { MutableInteractionSource() }
-                        val interactions = remember { mutableStateListOf<Interaction>() }
                         MyButton(interactionSource)
                         LaunchedEffect(interactionSource) {
                             interactionSource.interactions.collect { interaction ->
