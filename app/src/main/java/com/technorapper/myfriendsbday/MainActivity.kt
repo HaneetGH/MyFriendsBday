@@ -1,5 +1,6 @@
 package com.technorapper.myfriendsbday
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -7,12 +8,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
-import androidx.compose.foundation.interaction.PressInteraction.Press
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,9 +32,10 @@ import com.technorapper.myfriendsbday.domain.DataState
 import com.technorapper.myfriendsbday.ui.component.DatePickerCompose
 import com.technorapper.myfriendsbday.ui.component.EditTextState
 import com.technorapper.myfriendsbday.ui.component.PTEditText
+import com.technorapper.myfriendsbday.ui.dataList.UserListActivity
 import com.technorapper.myfriendsbday.ui.theme.MyFriendsBdayTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     lateinit var editTextState: EdittextStateCl
@@ -64,10 +70,12 @@ class MainActivity : ComponentActivity() {
                         DatePickerCompose(dateState)
 
 
-                        val interactionSource = remember { MutableInteractionSource() }
-                        MyButton(interactionSource)
-                        LaunchedEffect(interactionSource) {
-                            interactionSource.interactions.collect { interaction ->
+                        val interactionSourceSave = remember { MutableInteractionSource() }
+                        val interactionSourceNext = remember { MutableInteractionSource() }
+                        MyButton(interactionSourceSave, "Save Data")
+                        MyButton(interactionSourceNext, "Next Screen")
+                        LaunchedEffect(interactionSourceSave) {
+                            interactionSourceSave.interactions.collect { interaction ->
                                 when (interaction) {
                                     is PressInteraction.Press -> {
                                         viewModel.setStateEvent(
@@ -76,8 +84,19 @@ class MainActivity : ComponentActivity() {
                                                 dateState.dateStateChange
                                             )
                                         )
-                                        viewModel.setStateEvent(
-                                            MainStateEvent.getAllData
+                                    }
+                                }
+                            }
+                        }
+                        val mContext = LocalContext.current
+                        LaunchedEffect(interactionSourceNext) {
+                            interactionSourceNext.interactions.collect { interaction ->
+                                when (interaction) {
+                                    is PressInteraction.Press -> {
+                                        startActivity(
+                                            Intent(
+                                                mContext, UserListActivity::class.java
+                                            )
                                         )
                                     }
                                 }
@@ -91,10 +110,9 @@ class MainActivity : ComponentActivity() {
         }
         viewModel.getUiState().observe(this, Observer {
             var res = it as DataState
-            when(res)
-            {
-                is DataState.Success<*> ->{
-                    Log.d("DataState",it.toString())
+            when (res) {
+                is DataState.Success<*> -> {
+                    Log.d("DataState", it.toString())
                 }
             }
         })
@@ -115,7 +133,7 @@ fun DefaultPreview() {
 }
 
 @Composable
-fun MyButton(interactionSource: MutableInteractionSource) {
+fun MyButton(interactionSource: MutableInteractionSource, text: String) {
 
     Column(
 
@@ -159,7 +177,7 @@ fun MyButton(interactionSource: MutableInteractionSource) {
         // below line is use to
         // add text on our button
         {
-            Text(text = "Save Data", color = Color.White)
+            Text(text = text, color = Color.White)
         }
     }
 }

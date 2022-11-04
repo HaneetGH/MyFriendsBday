@@ -2,7 +2,6 @@ package com.technorapper.myfriendsbday.data.db.room.dao
 
 import androidx.room.*
 import com.technorapper.myfriendsbday.data.db.model.UserInfoModel
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserInfoDao {

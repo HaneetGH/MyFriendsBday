@@ -1,17 +1,17 @@
-package com.technorapper.myfriendsbday
+package com.technorapper.myfriendsbday.ui.dataList
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.technorapper.myfriendsbday.data.usecase.UserDetailsUseCase
+import com.technorapper.myfriendsbday.data.usecase.UserListUseCase
 import com.technorapper.myfriendsbday.domain.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainActivityViewModel @Inject constructor(
-    private val usecase: UserDetailsUseCase
+class UserListViewModel @Inject constructor(
+    private val usecase: UserListUseCase
 ) : ViewModel() {
     private val _uiState: MutableLiveData<DataState> = MutableLiveData()
     val uiState: MutableLiveData<DataState> get() = _uiState
@@ -25,11 +25,6 @@ class MainActivityViewModel @Inject constructor(
     fun setStateEvent(mainStateEvent: MainStateEvent) {
         viewModelScope.launch {
             when (mainStateEvent) {
-                is MainStateEvent.SaveData -> {
-                    usecase.saveData(
-                        mainStateEvent.name, mainStateEvent.dob
-                    ).collect { uiState.value = it }
-                }
                 is MainStateEvent.getAllData -> {
                     usecase.getAllData().collect {
                         uiState.value = it

@@ -3,8 +3,6 @@ package com.technorapper.myfriendsbday.di.module
 import android.content.Context
 import androidx.room.Room
 import com.technorapper.myfriendsbday.data.db.room.Database
-import com.technorapper.myfriendsbday.data.usecase.UserDetailsUseCase
-
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
