@@ -34,7 +34,7 @@ fun LabsList(
                 itemsIndexed(
                     items = Labs
                 ) { _, labItem ->
-                    if(labItem.name.isNotEmpty())
+                    if(!labItem.name.isEmpty())
                     RecipeCard(
                         lab = labItem,
                         onClick = { onClick.invoke(labItem)
