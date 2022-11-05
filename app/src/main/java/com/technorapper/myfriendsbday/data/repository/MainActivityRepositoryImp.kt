@@ -25,7 +25,7 @@ class MainActivityRepositoryImp @Inject constructor(
             // var response: VehicleCategoriesList = null
             try {
                 var res = remoteService.getLatestData("b4ccc1e0480d4a31a87f90ce3519757a")
-                var dataStateValue = DataState.Successs(res, Task.GET) as DataState
+                var dataStateValue = DataState.Success(res, Task.GET)
                 emit(dataStateValue)
             } catch (e: Exception) {
                 Log.e("fetch error", e.message.toString());

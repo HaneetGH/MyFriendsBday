@@ -86,12 +86,11 @@ class MainActivity : ComponentActivity() {
             var res = it as DataState
             when (res) {
                 is DataState.Success<*> -> {
-                    var data = res.data as DataState
                     when (res.task) {
                         Task.GET -> {
                             if (this::dateState.isInitialized) {
                                 dataListForLatestData.dateStateChangeList =
-                                    (data as DataState.Success<*>).data as List<CurrencyListModel>
+                                    res.data as List<CurrencyListModel>
                             }
                         }
                     }
