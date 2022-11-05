@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.technorapper.myfriendsbday.data.db.model.UserInfoModel
+import com.technorapper.myfriendsbday.data.model.UserInfoModel
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 

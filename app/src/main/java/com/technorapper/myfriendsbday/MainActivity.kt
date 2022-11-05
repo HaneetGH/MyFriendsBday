@@ -28,10 +28,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
+import com.technorapper.myfriendsbday.data.model.CurrencyListModel
+import com.technorapper.myfriendsbday.data.model.UserInfoModel
 import com.technorapper.myfriendsbday.domain.DataState
-import com.technorapper.myfriendsbday.ui.component.DatePickerCompose
-import com.technorapper.myfriendsbday.ui.component.EditTextState
-import com.technorapper.myfriendsbday.ui.component.PTEditText
+import com.technorapper.myfriendsbday.domain.Task
+import com.technorapper.myfriendsbday.ui.component.*
+import com.technorapper.myfriendsbday.ui.dataList.DateStateList
 import com.technorapper.myfriendsbday.ui.dataList.UserListActivity
 import com.technorapper.myfriendsbday.ui.theme.MyFriendsBdayTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,6 +43,7 @@ class MainActivity : ComponentActivity() {
     lateinit var editTextState: EdittextStateCl
     lateinit var dateState: DateState
     lateinit var textChangeState: TextChangeState
+    lateinit var dataListForLatestData: DateStateForLatestData
     private val viewModel by viewModels<MainActivityViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,40 +71,11 @@ class MainActivity : ComponentActivity() {
                             onTextChanged = { textChangeState.textChange = it },
                             onFocusChanged = {})
                         DatePickerCompose(dateState)
-
+                        dataListForLatestData = remember { DateStateForLatestData(emptyList()) }
+                        Dropdown(dataListForLatestData.dateStateChangeList)
 
                         val interactionSourceSave = remember { MutableInteractionSource() }
                         val interactionSourceNext = remember { MutableInteractionSource() }
-                        MyButton(interactionSourceSave, "Save Data")
-                        MyButton(interactionSourceNext, "Next Screen")
-                        LaunchedEffect(interactionSourceSave) {
-                            interactionSourceSave.interactions.collect { interaction ->
-                                when (interaction) {
-                                    is PressInteraction.Press -> {
-                                        viewModel.setStateEvent(
-                                            MainStateEvent.SaveData(
-                                                textChangeState.textChange,
-                                                dateState.dateStateChange
-                                            )
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                        val mContext = LocalContext.current
-                        LaunchedEffect(interactionSourceNext) {
-                            interactionSourceNext.interactions.collect { interaction ->
-                                when (interaction) {
-                                    is PressInteraction.Press -> {
-                                        startActivity(
-                                            Intent(
-                                                mContext, UserListActivity::class.java
-                                            )
-                                        )
-                                    }
-                                }
-                            }
-                        }
                     }
                 }
 
@@ -112,10 +86,19 @@ class MainActivity : ComponentActivity() {
             var res = it as DataState
             when (res) {
                 is DataState.Success<*> -> {
-                    Log.d("DataState", it.toString())
+                    var data = res.data as DataState
+                    when (res.task) {
+                        Task.GET -> {
+                            if (this::dateState.isInitialized) {
+                                dataListForLatestData.dateStateChangeList =
+                                    (data as DataState.Success<*>).data as List<CurrencyListModel>
+                            }
+                        }
+                    }
                 }
             }
         })
+        viewModel.setStateEvent(MainStateEvent.getAllData)
     }
 }
 

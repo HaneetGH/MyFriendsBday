@@ -1,4 +1,4 @@
-package com.technorapper.myfriendsbday.data.db.model
+package com.technorapper.myfriendsbday.data.model
 
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo

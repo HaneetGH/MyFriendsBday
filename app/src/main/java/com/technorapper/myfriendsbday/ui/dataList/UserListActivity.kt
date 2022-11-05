@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.Observer
-import com.technorapper.myfriendsbday.data.db.model.UserInfoModel
+import com.technorapper.myfriendsbday.data.model.UserInfoModel
 import com.technorapper.myfriendsbday.domain.DataState
 import com.technorapper.myfriendsbday.domain.Task
 import com.technorapper.myfriendsbday.ui.component.list.LabsList

@@ -1,7 +1,7 @@
 package com.technorapper.myfriendsbday.data.db.room.dao
 
 import androidx.room.*
-import com.technorapper.myfriendsbday.data.db.model.UserInfoModel
+import com.technorapper.myfriendsbday.data.model.UserInfoModel
 
 @Dao
 interface UserInfoDao {

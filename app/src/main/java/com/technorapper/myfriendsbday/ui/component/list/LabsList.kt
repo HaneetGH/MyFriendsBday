@@ -8,7 +8,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.technorapper.myfriendsbday.data.db.model.UserInfoModel
+import com.technorapper.myfriendsbday.data.model.UserInfoModel
 import com.technorapper.myfriendsbday.ui.component.list.HorizontalDottedProgressBar
 import com.technorapper.myfriendsbday.ui.component.list.NothingHere
 import com.technorapper.myfriendsbday.ui.component.list.RecipeCard

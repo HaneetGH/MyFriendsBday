@@ -7,37 +7,21 @@ import com.technorapper.myfriendsbday.domain.Task
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class UserDetailsUseCase @Inject constructor(
     private val mainActivityRepository: MainActivityRepository
-)  {
+) {
 
-    suspend fun saveData(name: String, dob: String): Flow<DataState> {
-        return flow {
-            emit(DataState.Loading(Task.SAVE))
-            // var response: VehicleCategoriesList = null
-            try {
-                mainActivityRepository.saveDataInDb(name, dob)
-                emit(DataState.Success(true, Task.SAVE))
-            } catch (e: Exception) {
-                Log.e("fetch erroe", e.message.toString());
-            }
-        }.catch {
-            emit(
-                DataState.ErrorThrowable(
-                    it, Task.SAVE
-                )
-            )
-        } // Use the IO thread for this Flow // Use the IO thread for this Flow // Use the IO thread for this Flow
-    }
-
-    suspend fun getAllData(): Flow<DataState> {
+    suspend fun getAllLatestData(): Flow<DataState> {
         return flow {
             emit(DataState.Loading(Task.GET))
             // var response: VehicleCategoriesList = null
             try {
-                mainActivityRepository.getAllDataDB().collect { emit(DataState.Success(it, Task.GET)) }
+                mainActivityRepository.getAllLatestData().collect {
+                    emit(it)
+                }
             } catch (e: Exception) {
                 Log.e("fetch erroe", e.message.toString());
             }
