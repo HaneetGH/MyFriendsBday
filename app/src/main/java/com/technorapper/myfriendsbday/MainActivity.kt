@@ -1,6 +1,5 @@
 package com.technorapper.myfriendsbday
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -41,7 +40,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     lateinit var editTextState: EdittextStateCl
-    lateinit var dateState: DateState
     lateinit var textChangeState: TextChangeState
     lateinit var dataListForLatestData: DateStateForLatestData
     private val viewModel by viewModels<MainActivityViewModel>()
@@ -56,13 +54,11 @@ class MainActivity : ComponentActivity() {
                     editTextState = remember {
                         EdittextStateCl(
                             EditTextState(
-                                "Name", false, 1, 1, 1, "error", true
+                                "Amount", false, 1, 1, 1, "error", true
                             )
                         )
                     }
-                    dateState = remember {
-                        DateState("")
-                    }
+
                     textChangeState = remember {
                         TextChangeState("")
                     }
@@ -70,16 +66,29 @@ class MainActivity : ComponentActivity() {
                         PTEditText(editTextState,
                             onTextChanged = { textChangeState.textChange = it },
                             onFocusChanged = {})
-                        DatePickerCompose(dateState)
                         dataListForLatestData = remember { DateStateForLatestData(emptyList()) }
                         Dropdown(dataListForLatestData.dateStateChangeList)
 
                         val interactionSourceSave = remember { MutableInteractionSource() }
                         val interactionSourceNext = remember { MutableInteractionSource() }
+                        MyButton(interactionSourceSave, "Convert")
+                        LaunchedEffect(interactionSourceSave) {
+                            interactionSourceSave.interactions.collect { interaction ->
+                                when (interaction) {
+                                    is PressInteraction.Press -> {
+                                        viewModel.setStateEvent(
+                                            MainStateEvent.convertCurrency(
+                                                "", 1.1
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
-                Log.d("Data", textChangeState.textChange + "--" + dateState.dateStateChange)
+                Log.d("Data", textChangeState.textChange + "--")
             }
         }
         viewModel.getUiState().observe(this, Observer {
@@ -88,7 +97,7 @@ class MainActivity : ComponentActivity() {
                 is DataState.Success<*> -> {
                     when (res.task) {
                         Task.GET -> {
-                            if (this::dateState.isInitialized) {
+                            if (this::dataListForLatestData.isInitialized) {
                                 dataListForLatestData.dateStateChangeList =
                                     res.data as List<CurrencyListModel>
                             }

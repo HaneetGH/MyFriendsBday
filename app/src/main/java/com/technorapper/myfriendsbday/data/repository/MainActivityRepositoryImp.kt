@@ -1,8 +1,10 @@
 package com.technorapper.myfriendsbday.data.repository
 
 import android.util.Log
+import com.technorapper.myfriendsbday.data.db.room.dao.CurrencyListDao
 import com.technorapper.myfriendsbday.data.model.UserInfoModel
 import com.technorapper.myfriendsbday.data.db.room.dao.UserInfoDao
+import com.technorapper.myfriendsbday.data.model.CurrencyListModel
 import com.technorapper.myfriendsbday.data.remote.RemoteService
 import com.technorapper.myfriendsbday.domain.DataState
 import com.technorapper.myfriendsbday.domain.Task
@@ -16,7 +18,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainActivityRepositoryImp @Inject constructor(
-    private val remoteService: RemoteService
+    private val remoteService: RemoteService, private val dao: CurrencyListDao
 ) : MainActivityRepository {
 
     override fun getAllLatestData(): Flow<DataState> {
@@ -36,6 +38,32 @@ class MainActivityRepositoryImp @Inject constructor(
                     it, Task.GET
                 )
             )
+        }
+    }
+
+    override fun writeInDB(list: List<CurrencyListModel>) {
+        var jobOne = CoroutineScope(Dispatchers.IO).launch {
+            val stepOne = async {
+                dao.insertAllOrders(list)
+            }
+        }
+    }
+
+    override fun convertCurrency(from: String, value: String): Flow<DataState> {
+        return flow {
+            emit(DataState.Loading(Task.CONVERT))
+            // var response: VehicleCategoriesList = null
+            try {
+                // TODO conversion  logic
+            } catch (e: Exception) {
+                Log.e("fetch error", e.message.toString());
+            }
+        }.catch {
+            /*emit(
+                DataState.ErrorThrowable(
+                    it, Task.GET
+                )
+            )*/
         }
     }
 }
