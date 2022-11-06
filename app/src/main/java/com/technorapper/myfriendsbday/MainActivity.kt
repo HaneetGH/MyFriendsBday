@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
+import com.technorapper.myfriendsbday.data.model.CurrencyConvertedListModel
 import com.technorapper.myfriendsbday.data.model.CurrencyListModel
 import com.technorapper.myfriendsbday.data.model.UserInfoModel
 import com.technorapper.myfriendsbday.domain.DataState
@@ -78,7 +79,8 @@ class MainActivity : ComponentActivity() {
                                     is PressInteraction.Press -> {
                                         viewModel.setStateEvent(
                                             MainStateEvent.convertCurrency(
-                                                "", 1.1
+                                                dataListForLatestData.dateStateChangeList[0].currency,
+                                                textChangeState.textChange.toDouble()
                                             )
                                         )
                                     }
@@ -101,6 +103,11 @@ class MainActivity : ComponentActivity() {
                                 dataListForLatestData.dateStateChangeList =
                                     res.data as List<CurrencyListModel>
                             }
+                        }
+                        Task.CONVERT -> {
+
+                            var list = res.data as List<CurrencyConvertedListModel>
+
                         }
                     }
                 }
@@ -148,7 +155,7 @@ fun MyButton(interactionSource: MutableInteractionSource, text: String) {
             onClick = {
                 // when user is clicking the button
                 // we are displaying a toast message.
-                Toast.makeText(context, "Welcome to Geeks for Geeks", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Converting.. s", Toast.LENGTH_LONG).show()
             },
             // in below line we are using modifier
             // which is use to add padding to our button

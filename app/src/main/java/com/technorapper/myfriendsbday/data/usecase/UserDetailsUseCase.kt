@@ -40,7 +40,7 @@ class UserDetailsUseCase @Inject constructor(
             emit(DataState.Loading(Task.CONVERT))
             // var response: VehicleCategoriesList = null
             try {
-                mainActivityRepository.getAllLatestData().collect {
+                mainActivityRepository.convertCurrency(from, value).collect {
                     emit(it)
                 }
             } catch (e: Exception) {
@@ -49,7 +49,7 @@ class UserDetailsUseCase @Inject constructor(
         }.catch {
             emit(
                 DataState.ErrorThrowable(
-                    it, Task.GET
+                    it, Task.CONVERT
                 )
             )
         } // Use the IO thread for this Flow // Use the IO thread for this Flow // Use the IO thread for this Flow

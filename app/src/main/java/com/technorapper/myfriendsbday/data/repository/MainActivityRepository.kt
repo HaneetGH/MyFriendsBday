@@ -8,5 +8,5 @@ import kotlinx.coroutines.flow.Flow
 interface MainActivityRepository {
     fun getAllLatestData(): Flow<DataState>
     fun writeInDB(list:List<CurrencyListModel>)
-    fun convertCurrency(from: String, value: String): Flow<DataState>
+    fun convertCurrency(from: String, value: Double): Flow<DataState>
 }

@@ -22,6 +22,8 @@ interface CurrencyListDao {
     @Query("select * from currencyListMaster")
     suspend fun getAllCurrencyList(): List<CurrencyListModel>
 
+    @Query("select * from currencyListMaster where currency = :value")
+    suspend fun getCurrency(value: String): CurrencyListModel
 
     @Update
     fun updateUser(currencyList: CurrencyListModel?)
