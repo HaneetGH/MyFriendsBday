@@ -8,7 +8,13 @@ plugins {
 android {
     namespace 'com.technorapper.myfriendsbday'
     compileSdk 32
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
 
+        unitTests.all {
+            useJUnitPlatform() // <--- this is the important part
+        }
+    }
     defaultConfig {
         applicationId "com.technorapper.myfriendsbday"
         minSdk 24
@@ -72,10 +78,13 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+    implementation 'androidx.test.ext:junit-ktx:1.1.3'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
     annotationProcessor "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0"
+
     implementation "com.google.dagger:hilt-android:2.44"
     kapt "com.google.dagger:hilt-compiler:2.44"
     testImplementation 'junit:junit:4.13.2'
@@ -84,6 +93,6 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
-
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
 
 }

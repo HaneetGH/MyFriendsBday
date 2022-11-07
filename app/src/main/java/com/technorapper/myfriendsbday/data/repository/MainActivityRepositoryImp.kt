@@ -1,6 +1,7 @@
 package com.technorapper.myfriendsbday.data.repository
 
 import android.util.Log
+import com.technorapper.myfriendsbday.common.Utils
 import com.technorapper.myfriendsbday.data.MyPreference
 import com.technorapper.myfriendsbday.data.db.room.dao.CurrencyListDao
 import com.technorapper.myfriendsbday.data.model.CurrencyConvertedListModel
@@ -30,7 +31,7 @@ class MainActivityRepositoryImp @Inject constructor(
         return flow {
             emit(DataState.Loading(Task.GET))
             try {
-                if (!isSyncUnable(myPreference.getSync())) {
+                if (!Utils.isSyncUnable(myPreference.getSync())) {
                     myPreference.setSync(Calendar.getInstance().timeInMillis)
                     var result = remoteService.getLatestData("b4ccc1e0480d4a31a87f90ce3519757a")
                     var dataStateValue = DataState.Success(result, Task.GET)
@@ -66,14 +67,6 @@ class MainActivityRepositoryImp @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun isSyncUnable(sync: Long): Boolean {
-        val now = Calendar.getInstance().timeInMillis
-        val last = Calendar.getInstance()
-        last.timeInMillis = sync
-        last.add(Calendar.MINUTE, 30);
-        return last.timeInMillis > now
     }
 
     private suspend fun getValuesFromData(it: DataState): Flow<DataState> {
