@@ -3,6 +3,7 @@ package com.technorapper.myfriendsbday.data.db.room.dao
 import androidx.room.*
 import com.technorapper.myfriendsbday.data.model.CurrencyListModel
 import com.technorapper.myfriendsbday.data.model.UserInfoModel
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CurrencyListDao {
@@ -20,7 +21,7 @@ interface CurrencyListDao {
 
     // Gets all contact in the database
     @Query("select * from currencyListMaster")
-    suspend fun getAllCurrencyList(): List<CurrencyListModel>
+    fun getAllCurrencyList(): Flow<List<CurrencyListModel>>
 
     @Query("select * from currencyListMaster where currency = :value")
     suspend fun getCurrency(value: String): CurrencyListModel

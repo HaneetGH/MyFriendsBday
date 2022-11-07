@@ -100,8 +100,7 @@ class MainActivity : ComponentActivity() {
                     when (res.task) {
                         Task.GET -> {
                             if (this::dataListForLatestData.isInitialized) {
-                                dataListForLatestData.dateStateChangeList =
-                                    res.data as List<CurrencyListModel>
+                                dataListForLatestData.dateStateChangeList = res.data as List<CurrencyListModel>
                             }
                         }
                         Task.CONVERT -> {

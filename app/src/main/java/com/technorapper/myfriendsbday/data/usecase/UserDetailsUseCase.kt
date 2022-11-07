@@ -2,14 +2,13 @@ package com.technorapper.myfriendsbday.data.usecase
 
 import android.util.Log
 import com.technorapper.myfriendsbday.data.model.CurrencyListModel
+import com.technorapper.myfriendsbday.data.model.latest.LatestDataModel
 import com.technorapper.myfriendsbday.data.repository.MainActivityRepository
 import com.technorapper.myfriendsbday.domain.DataState
 import com.technorapper.myfriendsbday.domain.Task
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
+import kotlin.reflect.full.declaredMemberProperties
 
 class UserDetailsUseCase @Inject constructor(
     private val mainActivityRepository: MainActivityRepository
@@ -20,6 +19,7 @@ class UserDetailsUseCase @Inject constructor(
             emit(DataState.Loading(Task.GET))
             // var response: VehicleCategoriesList = null
             try {
+
                 mainActivityRepository.getAllLatestData().collect {
                     emit(it)
                 }
@@ -53,9 +53,5 @@ class UserDetailsUseCase @Inject constructor(
                 )
             )
         } // Use the IO thread for this Flow // Use the IO thread for this Flow // Use the IO thread for this Flow
-    }
-
-    fun writeInDB(list: List<CurrencyListModel>) {
-        mainActivityRepository.writeInDB(list)
     }
 }
