@@ -43,6 +43,7 @@ class MainActivity : ComponentActivity() {
     lateinit var editTextState: EdittextStateCl
     lateinit var textChangeState: TextChangeState
     lateinit var dataListForLatestData: DateStateForLatestData
+    lateinit var dataListForConversionData: DateStateForConversionData
     private val viewModel by viewModels<MainActivityViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +69,13 @@ class MainActivity : ComponentActivity() {
                             onTextChanged = { textChangeState.textChange = it },
                             onFocusChanged = {})
                         dataListForLatestData = remember { DateStateForLatestData(emptyList()) }
+                        dataListForConversionData =
+                            remember { DateStateForConversionData(emptyList()) }
                         Dropdown(dataListForLatestData.dateStateChangeList)
+                        gridView(
+                            context = LocalContext.current,
+                            list = dataListForConversionData.dateStateChangeList
+                        )
 
                         val interactionSourceSave = remember { MutableInteractionSource() }
                         val interactionSourceNext = remember { MutableInteractionSource() }
@@ -100,12 +107,16 @@ class MainActivity : ComponentActivity() {
                     when (res.task) {
                         Task.GET -> {
                             if (this::dataListForLatestData.isInitialized) {
-                                dataListForLatestData.dateStateChangeList = res.data as List<CurrencyListModel>
+                                dataListForLatestData.dateStateChangeList =
+                                    res.data as List<CurrencyListModel>
                             }
                         }
                         Task.CONVERT -> {
 
                             var list = res.data as List<CurrencyConvertedListModel>
+                            if (this::dataListForConversionData.isInitialized) {
+                                dataListForConversionData.dateStateChangeList = list
+                            }
 
                         }
                     }
