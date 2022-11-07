@@ -14,3 +14,6 @@ class DateStateForLatestData(date: List<CurrencyListModel>) {
 class DateStateForConversionData(date: List<CurrencyConvertedListModel>) {
     var dateStateChangeList by mutableStateOf(date)
 }
+class DateStateForSelectedCurrency(date: String) {
+    var dateStateChange by mutableStateOf(date)
+}

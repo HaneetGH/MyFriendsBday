@@ -29,12 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
 import com.technorapper.myfriendsbday.data.model.CurrencyConvertedListModel
 import com.technorapper.myfriendsbday.data.model.CurrencyListModel
-import com.technorapper.myfriendsbday.data.model.UserInfoModel
 import com.technorapper.myfriendsbday.domain.DataState
 import com.technorapper.myfriendsbday.domain.Task
 import com.technorapper.myfriendsbday.ui.component.*
-import com.technorapper.myfriendsbday.ui.dataList.DateStateList
-import com.technorapper.myfriendsbday.ui.dataList.UserListActivity
 import com.technorapper.myfriendsbday.ui.theme.MyFriendsBdayTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -44,6 +41,7 @@ class MainActivity : ComponentActivity() {
     lateinit var textChangeState: TextChangeState
     lateinit var dataListForLatestData: DateStateForLatestData
     lateinit var dataListForConversionData: DateStateForConversionData
+    lateinit var dataListForSelectedCurrency: DateStateForSelectedCurrency
     private val viewModel by viewModels<MainActivityViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +69,11 @@ class MainActivity : ComponentActivity() {
                         dataListForLatestData = remember { DateStateForLatestData(emptyList()) }
                         dataListForConversionData =
                             remember { DateStateForConversionData(emptyList()) }
-                        Dropdown(dataListForLatestData.dateStateChangeList)
+                        dataListForSelectedCurrency =
+                            remember { DateStateForSelectedCurrency("INR") }
+                        Dropdown(dataListForLatestData.dateStateChangeList){
+                            dataListForSelectedCurrency.dateStateChange = it.toString()
+                        }
                         gridView(
                             context = LocalContext.current,
                             list = dataListForConversionData.dateStateChangeList
@@ -86,7 +88,7 @@ class MainActivity : ComponentActivity() {
                                     is PressInteraction.Press -> {
                                         viewModel.setStateEvent(
                                             MainStateEvent.convertCurrency(
-                                                dataListForLatestData.dateStateChangeList[0].currency,
+                                                dataListForSelectedCurrency.dateStateChange,
                                                 textChangeState.textChange.toDouble()
                                             )
                                         )

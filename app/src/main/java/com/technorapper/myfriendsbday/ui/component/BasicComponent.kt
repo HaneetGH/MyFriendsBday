@@ -19,7 +19,7 @@ import com.technorapper.myfriendsbday.data.model.CurrencyListModel
 
 
 @Composable
-fun Dropdown(items: List<CurrencyListModel>) {
+fun Dropdown(items: List<CurrencyListModel>, myCallback: (result: String?) -> Unit) {
     if (items.isEmpty()) return
     var expanded by remember { mutableStateOf(false) }
     val disabledValue = "B"
@@ -58,6 +58,7 @@ fun Dropdown(items: List<CurrencyListModel>) {
                     } else {
                         ""
                     }
+                    myCallback.invoke(s.currency)
                     Text(text = s.currency + disabledText)
                 }
             }
