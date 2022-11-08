@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
                             remember { DateStateForConversionData(emptyList()) }
                         dataListForSelectedCurrency =
                             remember { DateStateForSelectedCurrency("INR") }
-                        Dropdown(dataListForLatestData.dateStateChangeList){
+                        Dropdown(dataListForLatestData.dateStateChangeList) {
                             dataListForSelectedCurrency.dateStateChange = it.toString()
                         }
                         gridView(
@@ -89,7 +89,7 @@ class MainActivity : ComponentActivity() {
                                         viewModel.setStateEvent(
                                             MainStateEvent.convertCurrency(
                                                 dataListForSelectedCurrency.dateStateChange,
-                                                textChangeState.textChange.toDouble()
+                                                if (textChangeState.textChange.isEmpty()) 0.0 else textChangeState.textChange.toDouble()
                                             )
                                         )
                                     }
