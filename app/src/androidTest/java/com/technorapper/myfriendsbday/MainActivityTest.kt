@@ -9,7 +9,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-
+// We can mock and test each and every component but i am showing this small component to demonstrate How test works
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {
 
