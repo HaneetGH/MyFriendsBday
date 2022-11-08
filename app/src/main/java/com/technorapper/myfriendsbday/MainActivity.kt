@@ -43,6 +43,11 @@ class MainActivity : ComponentActivity() {
     lateinit var dataListForConversionData: DateStateForConversionData
     lateinit var dataListForSelectedCurrency: DateStateForSelectedCurrency
     private val viewModel by viewModels<MainActivityViewModel>()
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.setStateEvent(MainStateEvent.getAllData)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -128,7 +133,6 @@ class MainActivity : ComponentActivity() {
         viewModel.setStateEvent(MainStateEvent.getAllData)
     }
 }
-
 @Composable
 fun Greeting(name: String) {
     Text(text = "Hello $name!")
