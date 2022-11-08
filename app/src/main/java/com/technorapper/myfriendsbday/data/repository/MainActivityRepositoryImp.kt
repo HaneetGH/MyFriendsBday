@@ -33,15 +33,14 @@ class MainActivityRepositoryImp @Inject constructor(
             try {
                 if (!Utils.isSyncUnable(myPreference.getSync())) {
                     myPreference.setSync(Calendar.getInstance().timeInMillis)
-                    var result = remoteService.getLatestData("b4ccc1e0480d4a31a87f90ce3519757a")
+                    var result = remoteService.getLatestData("1a228103229f4394af46c805c5503d83")
                     var dataStateValue = DataState.Success(result, Task.GET)
                     getValuesFromData(dataStateValue).collect { emit(it) }
                 } else {
-                    dao.getAllCurrencyList().collect {
+                    dao.getAllCurrencyList().collect { it ->
                         if (it.isEmpty()) {
                             myPreference.setSync(Calendar.getInstance().timeInMillis)
-                            var res =
-                                remoteService.getLatestData("b4ccc1e0480d4a31a87f90ce3519757a")
+                            var res = remoteService.getLatestData("1a228103229f4394af46c805c5503d83")
                             var dataStateValue = DataState.Success(res, Task.GET)
                             getValuesFromData(dataStateValue).collect { emit(it) }
                         } else {
