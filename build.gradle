@@ -10,3 +10,12 @@ plugins {
     id 'org.jetbrains.kotlin.android' version '1.6.10' apply false
     id 'com.google.dagger.hilt.android' version '2.44' apply false
 }
+subprojects {
+
+    // androidx.test and hilt are forcing JUnit, 4.12. This forces them to use 4.13
+    configurations.configureEach {
+        resolutionStrategy {
+            force "junit:junit:4.13"
+        }
+    }
+}
