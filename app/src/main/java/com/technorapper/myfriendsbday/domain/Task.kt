@@ -1,5 +1,5 @@
 package com.technorapper.myfriendsbday.domain
 
 enum class Task {
-    SAVE,GET
+    SAVE,GET,CONVERT
 }

@@ -3,11 +3,16 @@ package com.technorapper.myfriendsbday
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.technorapper.myfriendsbday.data.model.CurrencyListModel
+import com.technorapper.myfriendsbday.data.model.latest.LatestDataModel
 import com.technorapper.myfriendsbday.data.usecase.UserDetailsUseCase
 import com.technorapper.myfriendsbday.domain.DataState
+import com.technorapper.myfriendsbday.domain.Task
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.reflect.full.declaredMemberProperties
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
@@ -25,13 +30,13 @@ class MainActivityViewModel @Inject constructor(
     fun setStateEvent(mainStateEvent: MainStateEvent) {
         viewModelScope.launch {
             when (mainStateEvent) {
-                is MainStateEvent.SaveData -> {
-                    usecase.saveData(
-                        mainStateEvent.name, mainStateEvent.dob
-                    ).collect { uiState.value = it }
-                }
                 is MainStateEvent.getAllData -> {
-                    usecase.getAllData().collect {
+                    usecase.getAllLatestData().collect {
+                        uiState.value = it
+                    }
+                }
+                is MainStateEvent.convertCurrency -> {
+                    usecase.convertCurrency(mainStateEvent.from, mainStateEvent.value).collect {
                         uiState.value = it
                     }
                 }
@@ -40,11 +45,14 @@ class MainActivityViewModel @Inject constructor(
 
         }
     }
+
+
+
 }
 
 sealed class MainStateEvent {
 
-    data class SaveData(var name: String, var dob: String) : MainStateEvent()
     object getAllData : MainStateEvent()
+    data class convertCurrency(var from: String, var value: Double) : MainStateEvent()
     object None : MainStateEvent()
 }

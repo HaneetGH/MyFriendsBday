@@ -1,6 +1,5 @@
 package com.technorapper.myfriendsbday
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -28,20 +27,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
+import com.technorapper.myfriendsbday.data.model.CurrencyConvertedListModel
+import com.technorapper.myfriendsbday.data.model.CurrencyListModel
 import com.technorapper.myfriendsbday.domain.DataState
-import com.technorapper.myfriendsbday.ui.component.DatePickerCompose
-import com.technorapper.myfriendsbday.ui.component.EditTextState
-import com.technorapper.myfriendsbday.ui.component.PTEditText
-import com.technorapper.myfriendsbday.ui.dataList.UserListActivity
+import com.technorapper.myfriendsbday.domain.Task
+import com.technorapper.myfriendsbday.ui.component.*
 import com.technorapper.myfriendsbday.ui.theme.MyFriendsBdayTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     lateinit var editTextState: EdittextStateCl
-    lateinit var dateState: DateState
     lateinit var textChangeState: TextChangeState
+    lateinit var dataListForLatestData: DateStateForLatestData
+    lateinit var dataListForConversionData: DateStateForConversionData
+    lateinit var dataListForSelectedCurrency: DateStateForSelectedCurrency
     private val viewModel by viewModels<MainActivityViewModel>()
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.setStateEvent(MainStateEvent.getAllData)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -53,13 +59,11 @@ class MainActivity : ComponentActivity() {
                     editTextState = remember {
                         EdittextStateCl(
                             EditTextState(
-                                "Name", false, 1, 1, 1, "error", true
+                                "Amount", false, 1, 1, 1, "error", true
                             )
                         )
                     }
-                    dateState = remember {
-                        DateState("")
-                    }
+
                     textChangeState = remember {
                         TextChangeState("")
                     }
@@ -67,35 +71,30 @@ class MainActivity : ComponentActivity() {
                         PTEditText(editTextState,
                             onTextChanged = { textChangeState.textChange = it },
                             onFocusChanged = {})
-                        DatePickerCompose(dateState)
-
+                        dataListForLatestData = remember { DateStateForLatestData(emptyList()) }
+                        dataListForConversionData =
+                            remember { DateStateForConversionData(emptyList()) }
+                        dataListForSelectedCurrency =
+                            remember { DateStateForSelectedCurrency("AED") }
+                        Dropdown(dataListForLatestData.dateStateChangeList) {
+                            dataListForSelectedCurrency.dateStateChange = it.toString()
+                        }
+                        gridView(
+                            context = LocalContext.current,
+                            list = dataListForConversionData.dateStateChangeList
+                        )
 
                         val interactionSourceSave = remember { MutableInteractionSource() }
                         val interactionSourceNext = remember { MutableInteractionSource() }
-                        MyButton(interactionSourceSave, "Save Data")
-                        MyButton(interactionSourceNext, "Next Screen")
+                        MyButton(interactionSourceSave, "Convert")
                         LaunchedEffect(interactionSourceSave) {
                             interactionSourceSave.interactions.collect { interaction ->
                                 when (interaction) {
                                     is PressInteraction.Press -> {
                                         viewModel.setStateEvent(
-                                            MainStateEvent.SaveData(
-                                                textChangeState.textChange,
-                                                dateState.dateStateChange
-                                            )
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                        val mContext = LocalContext.current
-                        LaunchedEffect(interactionSourceNext) {
-                            interactionSourceNext.interactions.collect { interaction ->
-                                when (interaction) {
-                                    is PressInteraction.Press -> {
-                                        startActivity(
-                                            Intent(
-                                                mContext, UserListActivity::class.java
+                                            MainStateEvent.convertCurrency(
+                                                dataListForSelectedCurrency.dateStateChange,
+                                                if (textChangeState.textChange.isEmpty()) 0.0 else textChangeState.textChange.toDouble()
                                             )
                                         )
                                     }
@@ -105,20 +104,35 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                Log.d("Data", textChangeState.textChange + "--" + dateState.dateStateChange)
+                Log.d("Data", textChangeState.textChange + "--")
             }
         }
         viewModel.getUiState().observe(this, Observer {
             var res = it as DataState
             when (res) {
                 is DataState.Success<*> -> {
-                    Log.d("DataState", it.toString())
+                    when (res.task) {
+                        Task.GET -> {
+                            if (this::dataListForLatestData.isInitialized) {
+                                dataListForLatestData.dateStateChangeList =
+                                    res.data as List<CurrencyListModel>
+                            }
+                        }
+                        Task.CONVERT -> {
+
+                            var list = res.data as List<CurrencyConvertedListModel>
+                            if (this::dataListForConversionData.isInitialized) {
+                                dataListForConversionData.dateStateChangeList = list
+                            }
+
+                        }
+                    }
                 }
             }
         })
+        viewModel.setStateEvent(MainStateEvent.getAllData)
     }
 }
-
 @Composable
 fun Greeting(name: String) {
     Text(text = "Hello $name!")
@@ -157,7 +171,7 @@ fun MyButton(interactionSource: MutableInteractionSource, text: String) {
             onClick = {
                 // when user is clicking the button
                 // we are displaying a toast message.
-                Toast.makeText(context, "Welcome to Geeks for Geeks", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Converting.. s", Toast.LENGTH_LONG).show()
             },
             // in below line we are using modifier
             // which is use to add padding to our button

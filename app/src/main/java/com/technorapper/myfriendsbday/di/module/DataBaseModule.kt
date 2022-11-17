@@ -25,8 +25,7 @@ object DataBaseModule {
 
     @Singleton
     @Provides
-    fun provideYourDao(db: Database) =
-        db.getUserInfoDaoMaster() // The reason we can implement a Dao for the database
-
+    fun provideCurrencyListDao(db: Database) =
+        db.getCurrencyListDao()
 
 }
