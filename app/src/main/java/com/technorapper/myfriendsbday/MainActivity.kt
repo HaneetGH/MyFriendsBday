@@ -75,7 +75,7 @@ class MainActivity : ComponentActivity() {
                         dataListForConversionData =
                             remember { DateStateForConversionData(emptyList()) }
                         dataListForSelectedCurrency =
-                            remember { DateStateForSelectedCurrency("INR") }
+                            remember { DateStateForSelectedCurrency("AED") }
                         Dropdown(dataListForLatestData.dateStateChangeList) {
                             dataListForSelectedCurrency.dateStateChange = it.toString()
                         }

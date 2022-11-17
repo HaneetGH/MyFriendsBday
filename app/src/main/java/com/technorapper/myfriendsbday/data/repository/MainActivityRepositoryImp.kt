@@ -112,6 +112,7 @@ class MainActivityRepositoryImp @Inject constructor(
                 // result from above multiply by from currency rate
                 var baseCurrency = dao.getCurrency(from)
                 var localUSDValue = value / baseCurrency.rate
+
                 dao.getAllCurrencyList().collect {
                     it.forEach {
                         var resultValue = localUSDValue * it.rate
